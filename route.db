@@ -1,0 +1,107 @@
+/* 1 mongo default data */
+{
+    "_id" : "guard-100",
+    "createdAt" : ISODate("2019-09-02T11:10:30.129Z"),
+    "updatedAt" : ISODate("2019-09-02T11:56:03.940Z"),
+    "status" : 1,
+    "system" : true,
+    "id" : "guard-100",
+    "predicates" : [
+        {
+            "name" : "Path",
+            "args" : {
+                "_genkey_0" : "/api/gateway/guard/100/**"
+            }
+        }
+    ],
+    "filters" : [
+        {
+            "name" : "Authentication",
+            "args" : {}
+        }
+    ],
+    "uri" : {
+        "scheme" : "lb",
+        "authority" : "gwall-guard-service",
+        "host" : "gwall-guard-service",
+        "port" : -1,
+        "path" : "",
+        "hash" : 0,
+        "string" : "lb://gwall-guard-service"
+    },
+    "order" : 0,
+    "_class" : "org.gwallgroup.gwall.entity.mongo.MongoRouteDefinition",
+    "desc" : null
+}
+
+/* 2 */
+{
+    "_id" : "authentication-000",
+    "createdAt" : ISODate("2019-09-02T11:11:29.045Z"),
+    "updatedAt" : ISODate("2019-09-02T11:44:59.578Z"),
+    "status" : 1,
+    "system" : true,
+    "id" : "authentication-000",
+    "predicates" : [
+        {
+            "name" : "Path",
+            "args" : {
+                "_genkey_0" : "/api/gateway/authentication/pub/**"
+            }
+        }
+    ],
+    "filters" : [
+        {
+            "name" : "LoginFacade",
+            "args" : {}
+        }
+    ],
+    "uri" : {
+        "scheme" : "lb",
+        "authority" : "gwall-authentication-service",
+        "host" : "gwall-authentication-service",
+        "port" : -1,
+        "path" : "",
+        "hash" : 0,
+        "string" : "lb://gwall-authentication-service"
+    },
+    "order" : 0,
+    "_class" : "org.gwallgroup.gwall.entity.mongo.MongoRouteDefinition",
+    "desc" : null
+}
+
+/* 3 */
+{
+    "_id" : "authentication-100",
+    "createdAt" : ISODate("2019-09-02T11:11:45.624Z"),
+    "updatedAt" : ISODate("2019-09-02T11:45:11.658Z"),
+    "status" : 1,
+    "system" : true,
+    "id" : "authentication-100",
+    "predicates" : [
+        {
+            "name" : "Path",
+            "args" : {
+                "_genkey_0" : "/api/gateway/authentication/100/**"
+            }
+        }
+    ],
+    "filters" : [
+        {
+            "name" : "Authentication",
+            "args" : {}
+        }
+    ],
+    "uri" : {
+        "scheme" : "lb",
+        "authority" : "gwall-authentication-service",
+        "host" : "gwall-authentication-service",
+        "port" : -1,
+        "path" : "",
+        "hash" : 0,
+        "string" : "lb://gwall-authentication-service"
+    },
+    "order" : 0,
+    "_class" : "org.gwallgroup.gwall.entity.mongo.MongoRouteDefinition",
+    "desc" : null
+}
