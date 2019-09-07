@@ -1,13 +1,16 @@
 
 ## 数据库相关
+
     数据库放在 res文件夹下
     route.json是mongodb中用于支持数据中台的网关路由配置
     gwall.sql 是数据中台对应的mysql数据库，只是保存了登录用户，默认用户名密码 admin / ant.design
     
 
 # 启动
+
     启动 mysql mongo redis，注意 authentication mysql的用户名和密码配置
-    配置好nacos服务器地址
+    将mysql和mongodb的初始化数据导入到数据库，除了mysql，redis和mongodb使用默认配置即可
+    配置好nacos服务器地址 配置 /etc/hosts nacos指向对应的nacos服务器，默认nacos使用8848端口
     启动 gwall guard authentication 模块
     启动gront cnpm i & npm run start:no-mock，访问8000端口 admin/ant.design
 
