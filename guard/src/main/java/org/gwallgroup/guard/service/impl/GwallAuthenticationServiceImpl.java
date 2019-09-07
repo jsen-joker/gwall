@@ -2,6 +2,11 @@ package org.gwallgroup.guard.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.nacos.common.util.Md5Utils;
+import java.nio.charset.Charset;
+import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.gwallgroup.common.utils.ResponseBase;
 import org.gwallgroup.common.utils.ResponseHelp;
 import org.gwallgroup.common.web.constants.Xheader;
@@ -15,12 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.annotation.Resource;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.nio.charset.Charset;
-
 @Service
 public class GwallAuthenticationServiceImpl implements GwallAuthenticationService {
 
@@ -33,15 +32,14 @@ public class GwallAuthenticationServiceImpl implements GwallAuthenticationServic
       String token = Md5Utils.getMD5(tokenLoginDto.getToken().getBytes(Charset.defaultCharset()));
       if (token.equals(exist.getPassword())) {
         String newSession = SessionUtil.getSessionId();
-//        JSONObject domain = new JSONObject();
-//        domain.put(Xheader.X_P, "");
-//        domain.put(Xheader.X_MAN, JSON.toJSON(exist));
-//        loginOperations.boundValueOps(exist.getId()).set(newSession, 6, TimeUnit.HOURS);
-//        sessionOperations.boundValueOps(newSession).set(domain, 6, TimeUnit.HOURS);
-        HttpServletRequest request = ((ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes())).getRequest();
+        HttpServletRequest request =
+            ((ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes()))
+                .getRequest();
         String tokenKey = AttributeHelp.getHeader(Xheader.X_TK, request, Xheader.AUTHORIZATION);
 
-        HttpServletResponse response = ((ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes())).getResponse();
+        HttpServletResponse response =
+            ((ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes()))
+                .getResponse();
         if (response != null) {
           Cookie cookie = new Cookie(tokenKey, newSession);
           cookie.setPath("/");

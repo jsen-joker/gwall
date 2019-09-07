@@ -6,7 +6,6 @@ import lombok.Data;
 @Data
 public class TokenLoginDto {
 
-  private String serviceType;
   private String loginType;
   private String version;
 

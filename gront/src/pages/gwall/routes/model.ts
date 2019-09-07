@@ -1,6 +1,6 @@
 import { AnyAction, Reducer } from 'redux';
 import { EffectsCommandMap } from 'dva';
-import { addRule, getRoutes, getInstances, removeRule, updateRule } from './service';
+import { getRoutes, getInstances, removeRule, updateRule, getRoute } from './service';
 
 import { RouteDefinitionData } from './data.d';
 
@@ -18,9 +18,10 @@ export interface ModelType {
   state: StateType;
   effects: {
     fetch: Effect;
-    add: Effect;
+    fetchServices: Effect;
     remove: Effect;
     update: Effect;
+    justGetRoute: Effect;
   };
   reducers: {
     save: Reducer<StateType>;
@@ -47,13 +48,19 @@ const Model: ModelType = {
         payload: response,
       });
     },
-    *add({ payload, callback }, { call, put }) {
-      const response = yield call(addRule, payload);
+    *fetchServices({ payload, callback }, { call, put }) {
+      const instances = yield call(getInstances);
+      const response = {
+        code: 0,
+        services: instances.data || [],
+      };
+      if (callback) {
+        callback(instances.data || []);
+      }
       yield put({
         type: 'save',
         payload: response,
       });
-      if (callback) callback();
     },
     *remove({ payload, callback }, { call, put }) {
       const response = yield call(removeRule, payload);
@@ -69,7 +76,13 @@ const Model: ModelType = {
         type: 'save',
         payload: response,
       });
-      if (callback) callback();
+      if (callback) callback(response);
+    },
+    *justGetRoute({ payload, callback }, { call }) {
+      if (callback) {
+        const response = yield call(getRoute, payload);
+        callback(response);
+      }
     },
   },
 

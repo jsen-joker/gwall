@@ -118,6 +118,12 @@ export default {
                   path: '/gwall/routes',
                   component: './gwall/routes',
                 },
+                {
+                  name: 'route-crud',
+                  path: '/gwall/routes/crud',
+                  component: './gwall/routes/crud',
+                  hideInMenu: true,
+                },
               ],
             },
             // {
@@ -197,13 +203,11 @@ export default {
   proxy: {
     '/api/': {
       target: 'http://localhost/',
-      changeOrigin: true,
-      // pathRewrite: { '^/gateway': '' },
+      changeOrigin: true, // pathRewrite: { '^/gateway': '' },
     },
     '/gateway/': {
       target: 'http://localhost/',
-      changeOrigin: true,
-      // pathRewrite: { '^/gateway': '' },
+      changeOrigin: true, // pathRewrite: { '^/gateway': '' },
     },
   },
   /*

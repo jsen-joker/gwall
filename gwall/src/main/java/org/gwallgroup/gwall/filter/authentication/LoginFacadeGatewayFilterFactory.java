@@ -53,7 +53,6 @@ public class LoginFacadeGatewayFilterFactory
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
       log.info("LoginFacadeGatewayFilterFactory");
       ServerHttpRequest req = exchange.getRequest();
-      String serviceType = getAttr(Xheader.X_ST, req, Xheader.DEFAULT);
       String tokenKey = getAttr(Xheader.X_TK, req, Xheader.AUTHORIZATION);
       return chain
           .filter(exchange)
@@ -62,7 +61,8 @@ public class LoginFacadeGatewayFilterFactory
                   () -> {
                     ServerHttpResponse response = exchange.getResponse();
                     if (response.getStatusCode() == HttpStatus.OK) {
-                      Route route = exchange.getAttribute(ServerWebExchangeUtils.GATEWAY_ROUTE_ATTR);
+                      Route route =
+                          exchange.getAttribute(ServerWebExchangeUtils.GATEWAY_ROUTE_ATTR);
                       String serviceId = "";
                       if (route != null) {
                         serviceId = route.getId();
@@ -70,8 +70,11 @@ public class LoginFacadeGatewayFilterFactory
                       String permission = getResponseAttribute(Xheader.X_P, response, "");
                       String man = getResponseAttribute(Xheader.X_MAN, response, null);
                       String token = getResponseAttribute(tokenKey, response, null);
+                      String serviceType =
+                          getResponseAttribute(Xheader.X_ST, response, Xheader.DEFAULT);
                       if (permission != null && man != null && token != null) {
-                        if (!loginStatusService.addSession(serviceId, serviceType, token, permission, man)) {
+                        if (!loginStatusService.addSession(
+                            serviceId, serviceType, token, permission, man)) {
                           response.setStatusCode(HttpStatus.BAD_REQUEST);
                         }
                       }
@@ -81,7 +84,7 @@ public class LoginFacadeGatewayFilterFactory
 
     @Override
     public int getOrder() {
-      return 0;
+      return 2;
     }
   }
 

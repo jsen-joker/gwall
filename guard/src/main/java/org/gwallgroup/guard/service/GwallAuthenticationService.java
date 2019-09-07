@@ -12,5 +12,4 @@ public interface GwallAuthenticationService {
    * @return res
    */
   ResponseBase login(TokenLoginDto tokenLoginDto);
-
 }

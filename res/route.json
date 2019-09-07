@@ -1,0 +1,86 @@
+{
+	"_class" : "org.gwallgroup.gwall.entity.mongo.MongoRouteDefinition",
+	"_id" : "guard-pub",
+	"createdAt" : ISODate("2019-09-01T16:28:56.821+08:00"),
+	"desc" : "用户登录接口",
+	"filters" : [
+		{
+			"name" : "LoginFacade",
+			"args" : {
+				
+			}
+		},
+		{
+			"name" : "RewritePath",
+			"args" : {
+				"_genkey_0" : "/api/1/authentication",
+				"_genkey_1" : "/api/1"
+			}
+		}
+	],
+	"id" : "guard-pub",
+	"order" : NumberInt(0),
+	"predicates" : [
+		{
+			"name" : "Path",
+			"args" : {
+				"_genkey_0" : "/api/1/authentication/pub/**"
+			}
+		}
+	],
+	"status" : NumberInt(1),
+	"system" : true,
+	"updatedAt" : ISODate("2019-09-07T16:09:27.264+08:00"),
+	"uri" : {
+		"scheme" : "lb",
+		"authority" : "gwall-guard-service",
+		"host" : "gwall-guard-service",
+		"port" : NumberInt(-1),
+		"path" : "",
+		"hash" : NumberInt(0),
+		"string" : "lb://gwall-guard-service"
+	}
+},
+{
+	"_class" : "org.gwallgroup.gwall.entity.mongo.MongoRouteDefinition",
+	"_id" : "guard-auth",
+	"createdAt" : ISODate("2019-09-01T16:28:56.821+08:00"),
+	"desc" : "用户认证，需要登录权限",
+	"filters" : [
+		{
+			"name" : "Authentication",
+			"args" : {
+				
+			}
+		},
+		{
+			"name" : "RewritePath",
+			"args" : {
+				"_genkey_0" : "/api/1/authentication",
+				"_genkey_1" : "/api/1"
+			}
+		}
+	],
+	"id" : "guard-auth",
+	"order" : NumberInt(0),
+	"predicates" : [
+		{
+			"name" : "Path",
+			"args" : {
+				"_genkey_0" : "/api/1/authentication/auth/**"
+			}
+		}
+	],
+	"status" : NumberInt(1),
+	"system" : true,
+	"updatedAt" : ISODate("2019-09-07T16:09:44.680+08:00"),
+	"uri" : {
+		"scheme" : "lb",
+		"authority" : "gwall-guard-service",
+		"host" : "gwall-guard-service",
+		"port" : NumberInt(-1),
+		"path" : "",
+		"hash" : NumberInt(0),
+		"string" : "lb://gwall-guard-service"
+	}
+},

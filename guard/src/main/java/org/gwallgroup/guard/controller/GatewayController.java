@@ -1,5 +1,7 @@
 package org.gwallgroup.guard.controller;
 
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.dubbo.config.annotation.Reference;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -21,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @date 2019/8/29 9:33 AM
  */
 @RestController
-@RequestMapping("/api/gateway/guard/100/gwall-gateway")
+@RequestMapping("/api/1/auth/gateway")
 public class GatewayController {
   @Reference(check = false, lazy = true)
   private RouteService routeService;
@@ -45,8 +48,28 @@ public class GatewayController {
   }
 
   @GetMapping("/routes")
-  public ResponseBase routes() {
-    return ResponseHelp.prefabSimpleSucceedData(routeService.routes());
+  public ResponseBase routes(
+      @RequestParam(value = "queryId", required = false) String id,
+      @RequestParam(value = "queryService", required = false) String service,
+      @RequestParam(value = "status", required = false) Integer status) {
+    Stream<GRouteDefinition> gRouteDefinitions = routeService.routes().stream();
+
+    if (id != null) {
+      gRouteDefinitions =
+          gRouteDefinitions.filter(
+              gRouteDefinition ->
+                  gRouteDefinition.getId() != null && gRouteDefinition.getId().contains(id));
+    }
+    if (service != null) {
+      gRouteDefinitions =
+          gRouteDefinitions.filter(
+              gRouteDefinition -> gRouteDefinition.getUri().toString().contains(service));
+    }
+    if (status != null) {
+      gRouteDefinitions =
+          gRouteDefinitions.filter(gRouteDefinition -> gRouteDefinition.getStatus() == status);
+    }
+    return ResponseHelp.prefabSimpleSucceedData(gRouteDefinitions.collect(Collectors.toList()));
   }
 
   @PostMapping("/routes")

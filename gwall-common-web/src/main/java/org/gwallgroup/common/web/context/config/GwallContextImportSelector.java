@@ -5,9 +5,7 @@ import org.springframework.context.annotation.ImportSelector;
 import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.util.ClassUtils;
 
-/**
- * @author jsen
- */
+/** @author jsen */
 public class GwallContextImportSelector implements ImportSelector {
 
   @Override

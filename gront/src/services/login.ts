@@ -10,7 +10,7 @@ export interface LoginParamsType {
 }
 
 export async function fakeAccountLogin(params: LoginParamsType) {
-  return request('/api/gateway/authentication/pub/token', {
+  return request('/api/1/authentication/pub/token', {
     method: 'POST',
     data: params,
   });

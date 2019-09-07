@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Import;
 
 /**
  * 允许 gwall 注入context
+ *
  * @author jsen
  */
 @Retention(value = java.lang.annotation.RetentionPolicy.RUNTIME)

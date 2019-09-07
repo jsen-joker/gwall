@@ -1,6 +1,5 @@
 package org.gwallgroup.guard.repository;
 
-
 import org.gwallgroup.guard.entity.po.GwallAccount;
 import org.springframework.data.repository.Repository;
 

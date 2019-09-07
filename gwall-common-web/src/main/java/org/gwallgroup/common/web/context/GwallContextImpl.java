@@ -27,11 +27,9 @@ public class GwallContextImpl implements GwallContext {
         return true;
       }
 
-      if ((this.getAuthentication() != null)
+      return (this.getAuthentication() != null)
           && (test.getAuthentication() != null)
-          && this.getAuthentication().equals(test.getAuthentication())) {
-        return true;
-      }
+          && this.getAuthentication().equals(test.getAuthentication());
     }
 
     return false;

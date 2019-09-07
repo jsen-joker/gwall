@@ -58,14 +58,14 @@ public class AuthenticationGatewayFilterFactory
       String version = getAttr(Xheader.X_V, req, Xheader.DEFAULT_VERSION);
       String tokenKey = getAttr(Xheader.X_TK, req, Xheader.AUTHORIZATION);
       String token = getAttr(tokenKey, req, null);
-      LoginCheck loginCheck =
-          loginStatusService.isLogin(serviceType, loginType, version, tokenKey, token);
+      LoginCheck loginCheck = loginStatusService.isLogin(loginType, version, tokenKey, token);
       setResponseStatus(exchange, HttpStatus.resolve(loginCheck.getCode()));
       if (loginCheck.getCode() == HttpStatus.OK.value()) {
         ServerHttpRequest request =
             exchange
                 .getRequest()
                 .mutate()
+                .header(Xheader.X_ST, loginCheck.getServiceType())
                 .header(Xheader.X_P, loginCheck.getPermissions())
                 .header(Xheader.X_X, Xheader.AC)
                 .header(Xheader.X_MAN, loginCheck.getXMan())
@@ -80,7 +80,7 @@ public class AuthenticationGatewayFilterFactory
     @Override
     public int getOrder() {
       // 优先于LoginFacade执行
-      return 0;
+      return 1;
     }
   }
 

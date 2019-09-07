@@ -1,9 +1,8 @@
 package org.gwallgroup.common.dubbo;
 
-import org.gwallgroup.common.entity.GRouteDefinition;
-
 import java.util.Collection;
 import java.util.HashMap;
+import org.gwallgroup.common.entity.GRouteDefinition;
 
 /**
  * route 操作接口 网关实现 guard 调用

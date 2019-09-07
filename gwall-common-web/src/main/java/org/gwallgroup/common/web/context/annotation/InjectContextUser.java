@@ -8,6 +8,7 @@ import java.lang.annotation.Target;
 
 /**
  * 注入当前用户
+ *
  * @author jsen
  */
 @Target({ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})

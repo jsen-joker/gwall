@@ -5,7 +5,7 @@ export async function query(): Promise<any> {
 }
 
 export async function queryCurrent(): Promise<any> {
-  return request('/api/gateway/authentication/100/currentUser');
+  return request('/api/1/authentication/auth/currentUser');
 }
 
 export async function queryNotices(): Promise<any> {

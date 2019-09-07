@@ -11,7 +11,6 @@ import {
   Menu,
   Row,
   Select,
-  message,
 } from 'antd';
 import React, { Component, Fragment } from 'react';
 
@@ -22,8 +21,8 @@ import { SorterResult } from 'antd/es/table';
 import { connect } from 'dva';
 import { StateType } from './model';
 import StandardTable, { StandardTableColumnProps } from './components/StandardTable';
-import UpdateForm, { FormValsType } from './components/UpdateForm';
 import { RouteDefinition, Params } from './data.d';
+import router from 'umi/router';
 
 import styles from './style.less';
 import { PaginationConfig } from 'antd/lib/table';
@@ -46,11 +45,9 @@ interface TableListProps extends FormComponentProps {
 }
 
 interface TableListState {
-  updateModalVisible: boolean;
   expandForm: boolean;
   selectedRows: RouteDefinition[];
   formValues: { [key: string]: string };
-  stepFormValues: Partial<RouteDefinition>;
 }
 
 /* eslint react/no-multi-comp:0 */
@@ -72,11 +69,9 @@ interface TableListState {
 )
 class TableList extends Component<TableListProps, TableListState> {
   state: TableListState = {
-    updateModalVisible: false,
     expandForm: false,
     selectedRows: [],
     formValues: {},
-    stepFormValues: {},
   };
 
   columns: StandardTableColumnProps[] = [
@@ -101,6 +96,7 @@ class TableList extends Component<TableListProps, TableListState> {
     {
       title: '状态',
       dataIndex: 'status',
+      filterMultiple: false,
       filters: [
         {
           text: status[0],
@@ -123,7 +119,7 @@ class TableList extends Component<TableListProps, TableListState> {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.handleUpdateModalVisible(true, record)}>配置</a>
+          <a onClick={() => this.goUpdate(record)}>配置</a>
         </Fragment>
       ),
     },
@@ -235,57 +231,19 @@ class TableList extends Component<TableListProps, TableListState> {
     });
   };
 
-  handleUpdateModalVisible = (flag?: boolean, record?: FormValsType) => {
-    this.setState({
-      updateModalVisible: !!flag,
-      stepFormValues: record || {},
-    });
-  };
-
-  handleUpdate = (fields: FormValsType) => {
-    const {
-      id,
-      desc,
-      path,
-      status,
-      uri = '',
-      order = 0,
-      authentication = false,
-      authorization = false,
-      loginFacade = false,
-      stripPrefix = 0,
-    } = fields;
-    const filters = [];
-    if (stripPrefix && stripPrefix !== 0) {
-      filters.push(`StripPrefix=${stripPrefix}`);
+  goUpdate = (record?: RouteDefinition) => {
+    if (record) {
+      router.push({
+        pathname: 'routes/crud',
+        query: {
+          id: record.id,
+        },
+      });
+    } else {
+      router.push({
+        pathname: 'routes/crud',
+      });
     }
-    if (authentication) {
-      filters.push('Authentication');
-    }
-    if (authorization) {
-      filters.push('Authorization');
-    }
-    if (loginFacade) {
-      filters.push('LoginFacade');
-    }
-    
-    let u = uri;
-    try {
-      new URL(uri);
-    } catch (e) {
-      u = `lb://${u}`;
-    }
-    const body = { id, desc, predicates: [`Path=${path}`], filters, status, uri: u, order };
-    console.log(body);
-
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'listTableList/update',
-      payload: body,
-    });
-
-    message.success('配置成功');
-    this.handleUpdateModalVisible();
   };
 
   renderSimpleForm() {
@@ -301,11 +259,11 @@ class TableList extends Component<TableListProps, TableListState> {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem label="路由ID">
-              {getFieldDecorator('id')(<Input placeholder="请输入" />)}
+              {getFieldDecorator('queryId')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
-            {getFieldDecorator('service')(
+            {getFieldDecorator('queryService')(
               <Select placeholder="请选择" style={{ width: '100%' }}>
                 {services.map(item => (
                   <Option key={item} value={item}>
@@ -345,12 +303,12 @@ class TableList extends Component<TableListProps, TableListState> {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem label="路由ID">
-              {getFieldDecorator('id')(<Input placeholder="请输入" />)}
+              {getFieldDecorator('queryId')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="服务名字">
-              {getFieldDecorator('service')(
+              {getFieldDecorator('queryService')(
                 <Select placeholder="请选择" style={{ width: '100%' }}>
                   {services.map(item => (
                     <Option key={item} value={item}>
@@ -364,7 +322,7 @@ class TableList extends Component<TableListProps, TableListState> {
           <Col md={8} sm={24}>
             <FormItem label="使用状态">
               {getFieldDecorator('status')(
-                <Select placeholder="请选择" style={{ width: '100%' }}>
+                <Select placeholder="请选择" style={{ width: '100%' }} disabled>
                   <Option value="0">关闭</Option>
                   <Option value="1">运行中</Option>
                 </Select>,
@@ -376,7 +334,7 @@ class TableList extends Component<TableListProps, TableListState> {
           <Col md={8} sm={24}>
             <FormItem label="更新日期">
               {getFieldDecorator('date')(
-                <DatePicker style={{ width: '100%' }} placeholder="请输入更新日期" />,
+                <DatePicker style={{ width: '100%' }} placeholder="请输入更新日期" disabled />,
               )}
             </FormItem>
           </Col>
@@ -409,29 +367,20 @@ class TableList extends Component<TableListProps, TableListState> {
       loading,
     } = this.props;
 
-    const { services } = data;
-    const { selectedRows, updateModalVisible, stepFormValues } = this.state;
+    const { selectedRows } = this.state;
     const menu = (
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
         <Menu.Item key="remove">删除</Menu.Item>
       </Menu>
     );
 
-    const updateMethods = {
-      handleUpdateModalVisible: this.handleUpdateModalVisible,
-      handleUpdate: this.handleUpdate,
-    };
     return (
       <PageHeaderWrapper>
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderForm()}</div>
             <div className={styles.tableListOperator}>
-              <Button
-                icon="plus"
-                type="primary"
-                onClick={() => this.handleUpdateModalVisible(true, { desc: '备注' })}
-              >
+              <Button icon="plus" type="primary" onClick={() => this.goUpdate()}>
                 新建
               </Button>
               {selectedRows.length > 0 && (
@@ -454,14 +403,6 @@ class TableList extends Component<TableListProps, TableListState> {
             />
           </div>
         </Card>
-        {stepFormValues && Object.keys(stepFormValues).length ? (
-          <UpdateForm
-            {...updateMethods}
-            updateModalVisible={updateModalVisible}
-            values={stepFormValues}
-            services={services}
-          />
-        ) : null}
       </PageHeaderWrapper>
     );
   }

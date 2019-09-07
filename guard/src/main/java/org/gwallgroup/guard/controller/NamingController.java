@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @date 2019/8/28 5:01 PM
  */
 @RestController
-@RequestMapping("/api/gateway/guard/100/gwall-naming")
+@RequestMapping("/api/1/auth/naming")
 public class NamingController {
 
   private NamingService namingService;

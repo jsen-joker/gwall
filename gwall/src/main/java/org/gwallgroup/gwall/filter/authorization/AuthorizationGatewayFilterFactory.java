@@ -72,7 +72,7 @@ public class AuthorizationGatewayFilterFactory
 
     @Override
     public int getOrder() {
-      return 0;
+      return 3;
     }
   }
 
